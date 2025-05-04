@@ -19,8 +19,8 @@ RUN npm install
 COPY . .
 
 # Копируем скрипт запуска и даем права
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+COPY ./docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
 
 # Открываем порт
 EXPOSE 5000
