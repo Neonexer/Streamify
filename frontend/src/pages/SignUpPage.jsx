@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { ShipWheelIcon } from 'lucide-react'; 
 import { Link } from 'react-router';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { axiosInstance } from '../lib/axios';
+import useSignup from '../hooks/useSignup';
 
 const SignUpPage = () => {
 
@@ -12,19 +11,11 @@ const SignUpPage = () => {
 		password: "",
 	})
 
-	const queryClient = useQueryClient();
-
-	const { mutate, isPending, error } = useMutation({
-		mutationFn: async () => {
-			const response = await axiosInstance.post("/auth/signup", signupData);
-			return response.data;
-		},
-		onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-	});
+	const { signupMutation, isPending, error } = useSignup();
 
 	const handleSignup = (e) => {
 		e.preventDefault();
-		mutate();
+		signupMutation(signupData);
 	}
 
 	return (
@@ -38,8 +29,17 @@ const SignUpPage = () => {
 					<div className='mb-4 flex items-center justify-start gap-2'>
 						<ShipWheelIcon className='size-9 text-primary' />
 						<span className='text-3xl font-bold font-mono bg-clip-text text-transparent 
-						bg-gradient-to-r from-primary to-secondary tracking-wider'>Streamify</span>
+						bg-gradient-to-r from-primary to-secondary tracking-wider'>
+							Streamify
+						</span>
 					</div>
+
+					{/* ERROR MESSAGE IF ANY */}
+					{error && (
+						<div className='alert alert-error mb-4'>
+							<span>{ error.response.data.message }</span>
+						</div>
+					)}
 
 					<div className='w-full'>
 						<form onSubmit={handleSignup}>
@@ -112,7 +112,12 @@ const SignUpPage = () => {
 								</div>
 
 								<button className='btn btn-primary w-full' type='submit'>
-									{ isPending ? "Signing up..." : "Create Account"}
+									{ isPending ? (
+										<>
+											<span className='loading loading-spinner loading-xs'></span>
+											Loading...
+										</>
+									) : "Create Account"}
 								</button>
 
 								<div className='text-center mt-4'>
