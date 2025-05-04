@@ -4,7 +4,7 @@ import FriendRequest from '../models/FriendRequest.js';
 export const getRecommendedUsers = async (req, res) => {
 	try {
 		const currentUserId = req.user.id;
-		const currentUser = await User.findById(currentUserUserId);
+		const currentUser = await User.findById(currentUserId);
 
 		const recommendedUsers = await User.find({
 			$and: [
