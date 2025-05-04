@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run db:up && npm i --prefix backend && npm i --prefix frontend && npm run build --prefix frontend",
-    "start": "npm run start --prefix backend",
-    "db:up": "docker-compose -f backend/docker-compose.yml up -d",
-    "db:down": "docker-compose -f backend/docker-compose.yml down"
+    "build": "npm i --prefix backend && npm i --prefix frontend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
   },
   "repository": {
     "type": "git",
