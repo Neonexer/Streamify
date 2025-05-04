@@ -1,0 +1,29 @@
+FROM node:18
+
+# Установка MongoDB
+RUN apt-get update && \
+	apt-get install -y gnupg curl && \
+	curl -fsSL https://pgp.mongodb.com/server-6.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-6.0.gpg && \
+	echo "deb [signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/debian bullseye/mongodb-org/6.0 main" \
+	| tee /etc/apt/sources.list.d/mongodb-org-6.0.list && \
+	apt-get update && \
+	apt-get install -y mongodb-org && \
+	mkdir -p /data/db
+
+# Рабочая директория
+WORKDIR /app
+
+# Копируем файлы проекта
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+# Копируем скрипт запуска и даем права
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+# Открываем порт
+EXPOSE 5000
+
+# Команда по умолчанию
+CMD ["/docker-entrypoint.sh"]
